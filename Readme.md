@@ -13,7 +13,7 @@ This document outlines the workflow for deploying a LAMP (Linux, Apache, MySQL, 
 ## Workflow Steps
 
 ### 1. Application Setup
-# for refreence to the application setup and code: [github](github.com)
+# for refreence to the application setup and code: [github](https://github.com/guderian120/lamp_stack_application)
 ```
 .
 ├── Dockerfile
