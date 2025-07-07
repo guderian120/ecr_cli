@@ -116,11 +116,41 @@ aws elbv2 describe-load-balancers --names lampstack-alb --query 'LoadBalancers[0
 ```
 
 ## Architecture Diagram
+
+
+```mermaid
+%% Detailed Architecture
+flowchart TB
+    client[Client] --> alb[Application Load Balancer]
+    
+    subgraph AWS VPC
+        alb --> tg[Target Group]
+        tg --> task1[ECS Task\nContainer:80]
+        tg --> task2[ECS Task\nContainer:80]
+        
+        subgraph Private Subnet
+            task1 --> rds[(RDS MySQL)]
+            task2 --> rds
+            rds
+        end
+        
+        subgraph Public Subnet
+            alb
+        end
+    end
+    
+    subgraph ECR
+        image[LAMP Container Image] -->|pushed| task1
+        image -->|pulled| task2
+    end
+    
+    style client fill:#fff,stroke:#333
+    style alb fill:#6f9,stroke:#333
+    style rds fill:#69f,stroke:#333
+    style image fill:#f96,stroke:#333
 ```
-Client → ALB → ECS Service (multiple tasks) → Private ECR Repository
-                     ↓
-              RDS MySQL Database
-```
+
+
 
 ## Maintenance and Updates
 
