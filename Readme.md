@@ -45,7 +45,7 @@ docker push <account-id>.dkr.ecr.<region>.amazonaws.com/<ecr-repo-name>:<tag>
 
 #### Create ECS Cluster
 ```bash
-aws ecs create-cluster --cluster-name lampstack-cluster
+aws ecs create-cluster --cluster-name ecsstack-cluster
 ```
 
 #### Create ALB and Target Group
@@ -97,7 +97,7 @@ aws ecs register-task-definition --family lampstack-task \
 
 #### Create ECS Service
 ```bash
-aws ecs create-service --cluster lampstack-cluster \
+aws ecs create-service --cluster ecsstack-cluster \
   --service-name lampstack-service \
   --task-definition lampstack-task:1 \
   --desired-count 2 \
@@ -109,7 +109,7 @@ aws ecs create-service --cluster lampstack-cluster \
 ### 4. Verify Deployment
 ```bash
 # Check service status
-aws ecs describe-services --cluster lampstack-cluster --services lampstack-service
+aws ecs describe-services --cluster ecsstack-cluster --services lampstack-service
 
 # Get ALB DNS name
 aws elbv2 describe-load-balancers --names lampstack-alb --query 'LoadBalancers[0].DNSName' --output text
@@ -162,18 +162,18 @@ aws ecs register-task-definition --cli-input-json file://new-task-def.json
 ```
 3. Update service:
 ```bash
-aws ecs update-service --cluster lampstack-cluster --service lampstack-service --task-definition lampstack-task:2
+aws ecs update-service --cluster ecsstack-cluster --service lampstack-service --task-definition lampstack-task:2
 ```
 
 ### Scale the Service
 ```bash
-aws ecs update-service --cluster lampstack-cluster --service lampstack-service --desired-count 4
+aws ecs update-service --cluster ecsstack-cluster --service lampstack-service --desired-count 4
 ```
 
 ## Cleanup
 ```bash
 # Delete service
-aws ecs delete-service --cluster lampstack-cluster --service lampstack-service --force
+aws ecs delete-service --cluster ecsstack-cluster --service lampstack-service --force
 
 # Delete task definition
 aws ecs deregister-task-definition --task-definition lampstack-task:1
@@ -183,14 +183,14 @@ aws elbv2 delete-load-balancer --load-balancer-arn <alb-arn>
 aws elbv2 delete-target-group --target-group-arn <target-group-arn>
 
 # Delete cluster
-aws ecs delete-cluster --cluster lampstack-cluster
+aws ecs delete-cluster --cluster ecsstack-cluster
 
 # Delete ECR images (optional)
 aws ecr batch-delete-image --repository-name <ecr-repo-name> --image-ids imageTag=<tag>
 ```
 
 ## Troubleshooting
-- Check ECS service events: `aws ecs describe-services --cluster lampstack-cluster --services lampstack-service`
+- Check ECS service events: `aws ecs describe-services --cluster ecsstack-cluster --services lampstack-service`
 - View container logs in CloudWatch
 - Check ALB access logs
 - Verify security group rules allow traffic on port 80
